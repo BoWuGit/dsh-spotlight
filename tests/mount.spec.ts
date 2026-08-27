@@ -80,6 +80,15 @@ describe('spotlight mount', () => {
     expect(input.getAttribute('aria-activedescendant')).toBe('dsh-spotlight-option-1')
     expect(document.getElementById('dsh-spotlight-option-0')?.getAttribute('aria-selected')).toBe('false')
     expect(document.getElementById('dsh-spotlight-option-1')?.getAttribute('aria-selected')).toBe('true')
+
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'p', ctrlKey: true, bubbles: true }))
+    expect(input.getAttribute('aria-activedescendant')).toBe('dsh-spotlight-option-0')
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'n', ctrlKey: true, bubbles: true }))
+    expect(input.getAttribute('aria-activedescendant')).toBe('dsh-spotlight-option-1')
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', ctrlKey: true, bubbles: true }))
+    expect(input.getAttribute('aria-activedescendant')).toBe('dsh-spotlight-option-0')
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'j', ctrlKey: true, bubbles: true }))
+    expect(input.getAttribute('aria-activedescendant')).toBe('dsh-spotlight-option-1')
     dispose()
   })
 

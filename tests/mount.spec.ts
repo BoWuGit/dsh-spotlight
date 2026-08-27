@@ -58,6 +58,31 @@ describe('spotlight mount', () => {
     dispose()
   })
 
+  it('exposes the keyboard-active result as the selected option', () => {
+    const host: SpotlightHost = {
+      sessions: fakeSessions({
+        ids: ['a', 'b'],
+        byId: {
+          a: { id: 'a', displayTitle: 'Alpha', running: false },
+          b: { id: 'b', displayTitle: 'Beta', running: false },
+        },
+        current: 'a',
+      }),
+    }
+    const { dispose } = mountSpotlight(host, document, window)
+    keydown('k', { ctrlKey: true })
+    const input = document.querySelector<HTMLInputElement>('[data-dsh-spotlight-input]')!
+
+    expect(input.getAttribute('aria-activedescendant')).toBe('dsh-spotlight-option-0')
+    expect(document.getElementById('dsh-spotlight-option-0')?.getAttribute('aria-selected')).toBe('true')
+
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }))
+    expect(input.getAttribute('aria-activedescendant')).toBe('dsh-spotlight-option-1')
+    expect(document.getElementById('dsh-spotlight-option-0')?.getAttribute('aria-selected')).toBe('false')
+    expect(document.getElementById('dsh-spotlight-option-1')?.getAttribute('aria-selected')).toBe('true')
+    dispose()
+  })
+
   it('filters results from the input value', () => {
     const { dispose } = mountSpotlight(hostWithSessions(), document, window)
     keydown('k', { ctrlKey: true })

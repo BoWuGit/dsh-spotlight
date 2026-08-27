@@ -216,6 +216,7 @@ export function mountSpotlight(host: SpotlightHost, document: Document, window: 
           option.id = `dsh-spotlight-option-${index}`
           option.setAttribute('data-dsh-spotlight-option', '')
           option.setAttribute('role', 'option')
+          option.setAttribute('aria-selected', String(index === active))
           const copy = document.createElement('span')
           const title = document.createElement('span')
           title.setAttribute('data-dsh-spotlight-title', '')

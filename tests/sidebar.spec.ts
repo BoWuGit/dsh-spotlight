@@ -46,6 +46,17 @@ describe('sidebar session shortcuts', () => {
     dispose()
   })
 
+  it('uses named modifiers in the onboarding tip on non-Apple platforms', () => {
+    sessionTree()
+    const dispose = mountSidebarShortcuts(document, window, false, () => false)
+
+    const text = document.querySelector('[data-dsh-sidebar-onboarding]')?.textContent
+    expect(text).toContain('按住 Alt')
+    expect(text).toContain('Shift+1–9')
+    expect(text).not.toContain('⌥')
+    dispose()
+  })
+
   it('persists an explicit onboarding dismissal', () => {
     sessionTree()
     const firstDispose = mountSidebarShortcuts(document, window, true, () => false)

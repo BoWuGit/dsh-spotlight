@@ -13,7 +13,7 @@ Slash Command、最近会话、当前界面操作和已安装插件的设置入�
   `/spotlight` 命令，不维护第二套命令注册表。
 - **快速搜索：** 对 Slash Command、最近会话、界面操作和插件设置进行稳定的模糊匹配。
 - **全键盘操作：** 上下方向键、Control-N/P 或 Control-J/K 选择，Enter 执行，Escape 关闭。
-- **候选项直达：** 使用 Alt/Option-Shift-1 至 Alt/Option-Shift-9 直接执行前九个可见结果，避开浏览器保留的 Command/Control-数字键。
+- **候选项直达：** 使用 Alt/Option-Shift-1 至 Alt/Option-Shift-9 直接执行当前前九个完整可见结果，避开浏览器保留的 Command/Control-数字键；结果滚动后会从 1 重新编号。
 - **干净卸载：** 插件卸载时移除事件监听、样式和 DOM 节点。
 
 ## 安装

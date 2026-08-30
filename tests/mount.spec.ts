@@ -137,6 +137,55 @@ describe('spotlight mount', () => {
     dispose()
   })
 
+  it('renumbers direct shortcuts to the fully visible result window', () => {
+    let scrolled = false
+    const rect = (top: number, bottom: number): DOMRect => ({
+      top, bottom, left: 0, right: 100, width: 100, height: bottom - top,
+      x: 0, y: top, toJSON: () => ({}),
+    })
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (this: HTMLElement) {
+      if (this.hasAttribute('data-dsh-spotlight-results')) return rect(0, 100)
+      const optionIndex = Number(this.getAttribute('data-dsh-spotlight-result-index'))
+      if (Number.isInteger(optionIndex)) {
+        const top = (optionIndex - (scrolled ? 2 : 0)) * 40
+        return rect(top, top + 40)
+      }
+      return rect(0, 0)
+    })
+    const host: SpotlightHost = {
+      sessions: fakeSessions({
+        ids: ['a', 'b', 'c', 'd'],
+        byId: {
+          a: { id: 'a', displayTitle: 'Alpha', running: false },
+          b: { id: 'b', displayTitle: 'Beta', running: false },
+          c: { id: 'c', displayTitle: 'Charlie', running: false },
+          d: { id: 'd', displayTitle: 'Delta', running: false },
+        },
+        current: 'a',
+      }),
+    }
+    const { dispose } = mountSpotlight(host, document, window)
+    keydown('k', { ctrlKey: true })
+    const results = document.querySelector<HTMLElement>('[data-dsh-spotlight-results]')!
+    const input = document.querySelector<HTMLInputElement>('[data-dsh-spotlight-input]')!
+
+    expect([...document.querySelectorAll('[data-dsh-spotlight-result-shortcut]')]
+      .map(shortcut => shortcut.textContent)).toEqual(['Alt+Shift+1', 'Alt+Shift+2'])
+    scrolled = true
+    results.dispatchEvent(new Event('scroll'))
+    const options = [...document.querySelectorAll('[data-dsh-spotlight-option]')]
+    expect(options.slice(0, 2).map(option => option.querySelector('[data-dsh-spotlight-result-shortcut]')))
+      .toEqual([null, null])
+    expect(options.slice(2).map(option => option.querySelector('[data-dsh-spotlight-result-shortcut]')?.textContent))
+      .toEqual(['Alt+Shift+1', 'Alt+Shift+2'])
+
+    input.dispatchEvent(new KeyboardEvent('keydown', {
+      key: '€', code: 'Digit2', altKey: true, shiftKey: true, bubbles: true,
+    }))
+    expect(host.sessions.open).toHaveBeenCalledWith('d')
+    dispose()
+  })
+
   it('filters results from the input value', () => {
     const { dispose } = mountSpotlight(hostWithSessions(), document, window)
     keydown('k', { ctrlKey: true })

@@ -19,7 +19,8 @@ plugin settings—without leaving the keyboard.
 - **Keyboard navigation:** Arrow Up/Down, Control-N/P, or Control-J/K to
   select; Enter to run and Escape to close.
 - **Direct results:** Alt/Option-Shift-1 through Alt/Option-Shift-9 execute the
-  first nine visible results without using browser-reserved Command/Control-number keys.
+  first nine fully visible results without using browser-reserved Command/Control-number
+  keys. The visible window renumbers from 1 whenever the results scroll.
 - **Clean lifecycle:** removes its event listeners, styles, and DOM nodes when
   unloaded.
 

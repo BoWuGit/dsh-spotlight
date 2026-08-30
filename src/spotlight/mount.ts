@@ -160,6 +160,7 @@ export function mountSpotlight(host: SpotlightHost, document: Document, window: 
     }
     let matches = searchCandidates(actions, '')
     let active = matches.length > 0 ? 0 : -1
+    let directResultIndexes: number[] = []
 
     const renderShortcut = (): void => {
       shortcutButton.textContent = recordingShortcut
@@ -201,6 +202,30 @@ export function mountSpotlight(host: SpotlightHost, document: Document, window: 
       action.run()
     }
 
+    const refreshDirectShortcuts = (): void => {
+      const options = [...results.querySelectorAll<HTMLElement>('[data-dsh-spotlight-option]')]
+      for (const option of options) {
+        option.querySelector('[data-dsh-spotlight-result-shortcut]')?.remove()
+      }
+      const viewport = results.getBoundingClientRect()
+      const visibleOptions = options.filter(option => {
+        const bounds = option.getBoundingClientRect()
+        return bounds.top >= viewport.top - 0.5 && bounds.bottom <= viewport.bottom + 0.5
+      }).slice(0, 9)
+      directResultIndexes = visibleOptions.flatMap(option => {
+        const index = Number(option.getAttribute('data-dsh-spotlight-result-index'))
+        return Number.isInteger(index) ? [index] : []
+      })
+      directResultIndexes.forEach((resultIndex, shortcutIndex) => {
+        const accessory = options[resultIndex]?.querySelector('[data-dsh-spotlight-accessory]')
+        if (accessory === null || accessory === undefined) return
+        const directShortcut = document.createElement('kbd')
+        directShortcut.setAttribute('data-dsh-spotlight-result-shortcut', '')
+        directShortcut.textContent = formatResultShortcut(shortcutIndex, applePlatform)
+        accessory.appendChild(directShortcut)
+      })
+    }
+
     const render = (): void => {
       matches = capPerKind(searchCandidates(actions, input.value, 200), 6)
       if (active >= matches.length) active = matches.length - 1
@@ -218,6 +243,7 @@ export function mountSpotlight(host: SpotlightHost, document: Document, window: 
           option.type = 'button'
           option.id = `dsh-spotlight-option-${index}`
           option.setAttribute('data-dsh-spotlight-option', '')
+          option.setAttribute('data-dsh-spotlight-result-index', String(index))
           option.setAttribute('role', 'option')
           option.setAttribute('aria-selected', String(index === active))
           const copy = document.createElement('span')
@@ -234,12 +260,6 @@ export function mountSpotlight(host: SpotlightHost, document: Document, window: 
           kind.setAttribute('data-dsh-spotlight-kind', '')
           kind.textContent = KIND_LABEL[item.kind]
           accessory.appendChild(kind)
-          if (index < 9) {
-            const directShortcut = document.createElement('kbd')
-            directShortcut.setAttribute('data-dsh-spotlight-result-shortcut', '')
-            directShortcut.textContent = formatResultShortcut(index, applePlatform)
-            accessory.appendChild(directShortcut)
-          }
           option.append(copy, accessory)
           option.addEventListener('mousemove', () => {
             if (active !== index) { active = index; render() }
@@ -250,8 +270,10 @@ export function mountSpotlight(host: SpotlightHost, document: Document, window: 
         input.setAttribute('aria-activedescendant', `dsh-spotlight-option-${active}`)
       }
       count.textContent = `${matches.length} 个结果`
+      refreshDirectShortcuts()
     }
 
+    results.addEventListener('scroll', refreshDirectShortcuts)
     input.addEventListener('input', () => { active = 0; render() })
     input.addEventListener('keydown', event => {
       // Let IME Enter finish text composition instead of executing a result.
@@ -260,10 +282,11 @@ export function mountSpotlight(host: SpotlightHost, document: Document, window: 
       if (event.isComposing || event.keyCode === 229) return
       if (event.key === 'Escape') { event.preventDefault(); close(); return }
       const directIndex = directResultIndex(event)
-      if (directIndex !== undefined && directIndex < matches.length) {
+      const matchedIndex = directIndex === undefined ? undefined : directResultIndexes[directIndex]
+      if (matchedIndex !== undefined) {
         event.preventDefault()
         event.stopPropagation()
-        const action = matches[directIndex]?.item
+        const action = matches[matchedIndex]?.item
         if (action !== undefined) execute(action)
         return
       }
@@ -274,6 +297,7 @@ export function mountSpotlight(host: SpotlightHost, document: Document, window: 
         active = moveSelection(active, matches.length, delta)
         render()
         document.getElementById(`dsh-spotlight-option-${active}`)?.scrollIntoView({ block: 'nearest' })
+        refreshDirectShortcuts()
         return
       }
       if (event.key === 'Enter' && active >= 0) {

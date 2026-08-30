@@ -25,7 +25,7 @@ const CSS = `
 [data-dsh-spotlight-input]::placeholder { color: var(--dsw-alias-label-secondary, #8f96a3); }
 [data-dsh-spotlight-results] { max-height: min(470px, calc(100vh - 190px)); overflow: auto; padding: 8px; }
 [data-dsh-spotlight-option] { width: 100%; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 11px 12px; border: 0; border-radius: 11px; background: transparent; color: inherit; text-align: left; cursor: pointer; }
-[data-dsh-spotlight-option][aria-selected="true"], [data-dsh-spotlight-option]:hover { background: color-mix(in srgb, var(--dsw-alias-brand-primary, #4d6bfe) 16%, transparent); }
+[data-dsh-spotlight-option][aria-selected="true"] { background: color-mix(in srgb, var(--dsw-alias-brand-primary, #4d6bfe) 16%, transparent); }
 [data-dsh-spotlight-title] { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; font-weight: 620; }
 [data-dsh-spotlight-detail] { display: block; margin-top: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--dsw-alias-label-secondary, #969dab); font-size: 12px; }
 [data-dsh-spotlight-accessory] { display: flex; align-items: center; gap: 7px; }

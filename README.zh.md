@@ -14,6 +14,7 @@ Slash Command、最近会话、当前界面操作和已安装插件的设置入�
 - **快速搜索：** 对 Slash Command、最近会话、界面操作和插件设置进行稳定的模糊匹配。
 - **全键盘操作：** 上下方向键、Control-N/P 或 Control-J/K 选择，Enter 执行，Escape 关闭。
 - **候选项直达：** 使用 Alt/Option-Shift-1 至 Alt/Option-Shift-9 直接执行当前前九个完整可见结果，避开浏览器保留的 Command/Control-数字键；结果滚动后会从 1 重新编号。
+- **侧栏会话提示：** 命令面板关闭时，按住 Alt/Option 会在侧栏前九个完整可见会话上显示同一套快捷键；继续按 Shift 和数字即可打开会话，松开 Alt/Option 后提示消失。
 - **干净卸载：** 插件卸载时移除事件监听、样式和 DOM 节点。
 
 ## 安装
@@ -46,6 +47,7 @@ dsh --profile web
 1. 使用全局快捷键打开 Spotlight，或在 DSH Web 输入框输入 `/spotlight` 从斜杠菜单打开。
 2. 输入关键词筛选命令和操作。
 3. 使用上下方向键、Control-N/P 或 Control-J/K 与 Enter；按 Alt/Option-Shift-1–9 直接执行带编号的结果；或直接点击结果。
+4. 命令面板关闭时，按住 Alt/Option 显示侧栏会话快捷键，再加按 Shift 和 1–9 打开对应会话。
 4. 点击底部的「快捷键」并按下新组合键，即可修改快捷键。
 5. 点击「恢复默认」可还原平台默认值。
 

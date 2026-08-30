@@ -6,6 +6,7 @@ import {
   type SpotlightShortcut,
 } from './keyboard.ts'
 import { capPerKind, searchCandidates } from './search.ts'
+import { mountSidebarShortcuts } from './sidebar.ts'
 
 const STYLE_ID = 'dsh-spotlight-style'
 const ROOT_ATTRIBUTE = 'data-dsh-spotlight-root'
@@ -37,6 +38,8 @@ const CSS = `
 [data-dsh-spotlight-shortcut], [data-dsh-spotlight-shortcut-reset] { border: 0; padding: 0; background: transparent; color: inherit; font: inherit; cursor: pointer; }
 [data-dsh-spotlight-shortcut]:hover, [data-dsh-spotlight-shortcut-reset]:hover { color: var(--dsw-alias-label-primary, #f5f7fb); }
 [data-dsh-spotlight-shortcut][data-recording="true"] { color: var(--dsw-alias-label-primary, #f5f7fb); }
+[data-dsh-sidebar-shortcuts] { position: fixed; inset: 0; z-index: 2147482000; pointer-events: none; font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; }
+[data-dsh-sidebar-shortcut] { position: absolute; min-width: 43px; padding: 3px 7px; transform: translate(-100%, -50%); border: 1px solid var(--dsw-alias-border-l1, rgba(0,0,0,.1)); border-radius: 7px; background: var(--dsw-alias-bg-layer-2, #fff); color: var(--dsw-alias-label-secondary, #777); box-shadow: 0 1px 4px rgba(0,0,0,.08); font: 11px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace; text-align: center; }
 @media (prefers-reduced-motion: no-preference) { [data-dsh-spotlight-panel] { animation: dsh-spotlight-in .12s ease-out; } @keyframes dsh-spotlight-in { from { opacity: 0; transform: translateY(-8px) scale(.985); } } }
 `
 
@@ -321,6 +324,10 @@ export function mountSpotlight(host: SpotlightHost, document: Document, window: 
     })
   }
 
+  const disposeSidebarShortcuts = mountSidebarShortcuts(
+    document, window, applePlatform, () => root !== undefined,
+  )
+
   const onGlobalKeydown = (event: KeyboardEvent): void => {
     if (root !== undefined
       && (selectionDelta(event) !== undefined || directResultIndex(event) !== undefined)) return
@@ -334,6 +341,7 @@ export function mountSpotlight(host: SpotlightHost, document: Document, window: 
 
   const dispose = (): void => {
     window.removeEventListener('keydown', onGlobalKeydown, true)
+    disposeSidebarShortcuts()
     close()
     if (ownsStyle) document.getElementById(STYLE_ID)?.remove()
   }

@@ -21,6 +21,9 @@ plugin settings—without leaving the keyboard.
 - **Direct results:** Alt/Option-Shift-1 through Alt/Option-Shift-9 execute the
   first nine fully visible results without using browser-reserved Command/Control-number
   keys. The visible window renumbers from 1 whenever the results scroll.
+- **Sidebar session hints:** while the palette is closed, hold Alt/Option to overlay
+  the same shortcuts on the first nine fully visible session rows; press the complete
+  Alt/Option-Shift-number chord to open one. Releasing Alt/Option hides the hints.
 - **Clean lifecycle:** removes its event listeners, styles, and DOM nodes when
   unloaded.
 
@@ -57,6 +60,7 @@ dsh --profile web
    Web composer and pick the entry from the slash menu.
 2. Type to filter commands and actions.
 3. Use Arrow Up/Down, Control-N/P, or Control-J/K and Enter; press Alt/Option-Shift-1–9 to execute a numbered result directly; or click a result.
+4. With the palette closed, hold Alt/Option to reveal session shortcuts in the sidebar, then add Shift and press 1–9 to open one.
 4. Click **Shortcut** in the footer to record a different key combination.
 5. Click **Reset** to restore the platform default.
 

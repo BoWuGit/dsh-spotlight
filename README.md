@@ -24,6 +24,8 @@ plugin settings—without leaving the keyboard.
 - **Sidebar session hints:** while the palette is closed, hold Alt/Option to overlay
   the same shortcuts on the first nine fully visible session rows; press the complete
   Alt/Option-Shift-number chord to open one. Releasing Alt/Option hides the hints.
+  A dismissible first-run coachmark teaches the gesture and retires once Alt/Option
+  reveals the hints.
 - **Clean lifecycle:** removes its event listeners, styles, and DOM nodes when
   unloaded.
 
@@ -60,9 +62,9 @@ dsh --profile web
    Web composer and pick the entry from the slash menu.
 2. Type to filter commands and actions.
 3. Use Arrow Up/Down, Control-N/P, or Control-J/K and Enter; press Alt/Option-Shift-1–9 to execute a numbered result directly; or click a result.
-4. With the palette closed, hold Alt/Option to reveal session shortcuts in the sidebar, then add Shift and press 1–9 to open one.
-4. Click **Shortcut** in the footer to record a different key combination.
-5. Click **Reset** to restore the platform default.
+4. With the palette closed, follow the first-run coachmark or hold Alt/Option to reveal session shortcuts in the sidebar, then add Shift and press 1–9 to open one.
+5. Click **Shortcut** in the footer to record a different key combination.
+6. Click **Reset** to restore the platform default.
 
 Shortcut preferences are local to the current browser origin and profile.
 

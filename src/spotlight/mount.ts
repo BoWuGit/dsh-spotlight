@@ -40,6 +40,12 @@ const CSS = `
 [data-dsh-spotlight-shortcut][data-recording="true"] { color: var(--dsw-alias-label-primary, #f5f7fb); }
 [data-dsh-sidebar-shortcuts] { position: fixed; inset: 0; z-index: 2147482000; pointer-events: none; font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; }
 [data-dsh-sidebar-shortcut] { position: absolute; min-width: 43px; padding: 3px 7px; transform: translate(-100%, -50%); border: 1px solid var(--dsw-alias-border-l1, rgba(0,0,0,.1)); border-radius: 7px; background: var(--dsw-alias-bg-layer-2, #fff); color: var(--dsw-alias-label-secondary, #777); box-shadow: 0 1px 4px rgba(0,0,0,.08); font: 11px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace; text-align: center; }
+[data-dsh-sidebar-onboarding] { position: fixed; z-index: 100; box-sizing: border-box; display: flex; align-items: flex-start; gap: 8px; padding: 10px 10px 10px 12px; border: 1px solid var(--dsw-alias-border-l1, rgba(0,0,0,.1)); border-radius: 10px; background: var(--dsw-alias-bg-layer-2, #fff); color: var(--dsw-alias-label-secondary, #777); box-shadow: 0 6px 20px rgba(0,0,0,.12); font: 11px/1.45 ui-sans-serif, system-ui, -apple-system, sans-serif; }
+[data-dsh-sidebar-onboarding-copy] { display: flex; min-width: 0; flex: 1; flex-direction: column; gap: 3px; }
+[data-dsh-sidebar-onboarding-copy] strong { color: var(--dsw-alias-label-primary, #222); font-size: 12px; font-weight: 600; }
+[data-dsh-sidebar-onboarding] kbd { padding: 1px 4px; border: 1px solid var(--dsw-alias-border-l1, rgba(0,0,0,.1)); border-radius: 5px; background: var(--dsw-alias-bg-layer-1, rgba(0,0,0,.04)); color: var(--dsw-alias-label-primary, #222); font: 10px/1.3 ui-monospace, SFMono-Regular, Menlo, monospace; }
+[data-dsh-sidebar-onboarding-dismiss] { flex: none; width: 20px; height: 20px; border: 0; border-radius: 5px; padding: 0; background: transparent; color: var(--dsw-alias-label-secondary, #777); font: 16px/20px ui-sans-serif, system-ui, sans-serif; cursor: pointer; }
+[data-dsh-sidebar-onboarding-dismiss]:hover { background: var(--dsw-alias-bg-layer-1, rgba(0,0,0,.05)); color: var(--dsw-alias-label-primary, #222); }
 @media (prefers-reduced-motion: no-preference) { [data-dsh-spotlight-panel] { animation: dsh-spotlight-in .12s ease-out; } @keyframes dsh-spotlight-in { from { opacity: 0; transform: translateY(-8px) scale(.985); } } }
 `
 

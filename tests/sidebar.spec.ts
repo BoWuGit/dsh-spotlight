@@ -23,6 +23,7 @@ function sessionTree(): HTMLElement[] {
 
 beforeEach(() => {
   document.body.innerHTML = ''
+  window.localStorage.clear()
   installVisibleRects()
 })
 
@@ -31,6 +32,32 @@ afterEach(() => {
 })
 
 describe('sidebar session shortcuts', () => {
+  it('onboards the held-Alt gesture until the user reveals shortcuts', () => {
+    sessionTree()
+    const dispose = mountSidebarShortcuts(document, window, true, () => false)
+
+    const tip = document.querySelector('[data-dsh-sidebar-onboarding]')
+    expect(tip?.textContent).toContain('快速切换会话')
+    expect(tip?.textContent).toContain('按住 ⌥')
+
+    keydown('Alt', { altKey: true })
+    expect(document.querySelector('[data-dsh-sidebar-onboarding]')).toBeNull()
+    expect(window.localStorage.getItem('dsh.spotlight.sidebar-shortcuts-onboarded.v1')).toBe('true')
+    dispose()
+  })
+
+  it('persists an explicit onboarding dismissal', () => {
+    sessionTree()
+    const firstDispose = mountSidebarShortcuts(document, window, true, () => false)
+    document.querySelector<HTMLButtonElement>('[data-dsh-sidebar-onboarding-dismiss]')?.click()
+    expect(document.querySelector('[data-dsh-sidebar-onboarding]')).toBeNull()
+    firstDispose()
+
+    const secondDispose = mountSidebarShortcuts(document, window, true, () => false)
+    expect(document.querySelector('[data-dsh-sidebar-onboarding]')).toBeNull()
+    secondDispose()
+  })
+
   it('shows hints while Alt is held and removes them on release', () => {
     sessionTree()
     const dispose = mountSidebarShortcuts(document, window, true, () => false)

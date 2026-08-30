@@ -1,8 +1,8 @@
 import { discoverActions, discoverVisibleActions, type SpotlightAction } from './discovery.ts'
 import type { SpotlightHost } from './host.ts'
 import {
-  defaultShortcut, formatShortcut, isSpotlightShortcut, moveSelection, parseShortcut, selectionDelta,
-  shortcutFromEvent,
+  defaultShortcut, directResultIndex, formatResultShortcut, formatShortcut, isSpotlightShortcut,
+  moveSelection, parseShortcut, selectionDelta, shortcutFromEvent,
   type SpotlightShortcut,
 } from './keyboard.ts'
 import { capPerKind, searchCandidates } from './search.ts'
@@ -27,7 +27,9 @@ const CSS = `
 [data-dsh-spotlight-option][aria-selected="true"], [data-dsh-spotlight-option]:hover { background: color-mix(in srgb, var(--dsw-alias-brand-primary, #4d6bfe) 16%, transparent); }
 [data-dsh-spotlight-title] { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; font-weight: 620; }
 [data-dsh-spotlight-detail] { display: block; margin-top: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--dsw-alias-label-secondary, #969dab); font-size: 12px; }
+[data-dsh-spotlight-accessory] { display: flex; align-items: center; gap: 7px; }
 [data-dsh-spotlight-kind] { padding: 3px 7px; border: 1px solid var(--dsw-alias-border-l1, rgba(255,255,255,.12)); border-radius: 999px; color: var(--dsw-alias-label-secondary, #a1a7b3); font-size: 11px; }
+[data-dsh-spotlight-result-shortcut] { min-width: 31px; padding: 3px 6px; border: 1px solid var(--dsw-alias-border-l1, rgba(255,255,255,.12)); border-radius: 7px; background: var(--dsw-alias-bg-layer-1, rgba(255,255,255,.06)); color: var(--dsw-alias-label-secondary, #a1a7b3); font: 11px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace; text-align: center; }
 [data-dsh-spotlight-empty] { padding: 42px 18px; color: var(--dsw-alias-label-secondary, #969dab); text-align: center; font-size: 13px; }
 [data-dsh-spotlight-footer] { display: flex; justify-content: space-between; gap: 12px; padding: 10px 16px 12px; border-top: 1px solid var(--dsw-alias-border-l1, rgba(255,255,255,.08)); color: var(--dsw-alias-label-secondary, #8f96a3); font-size: 11px; }
 [data-dsh-spotlight-footer] kbd { padding: 2px 5px; border: 1px solid var(--dsw-alias-border-l1, rgba(255,255,255,.14)); border-radius: 5px; background: rgba(255,255,255,.04); font: inherit; }
@@ -226,10 +228,19 @@ export function mountSpotlight(host: SpotlightHost, document: Document, window: 
           detail.setAttribute('data-dsh-spotlight-detail', '')
           detail.textContent = item.detail ?? ''
           copy.append(title, detail)
+          const accessory = document.createElement('span')
+          accessory.setAttribute('data-dsh-spotlight-accessory', '')
           const kind = document.createElement('span')
           kind.setAttribute('data-dsh-spotlight-kind', '')
           kind.textContent = KIND_LABEL[item.kind]
-          option.append(copy, kind)
+          accessory.appendChild(kind)
+          if (index < 9) {
+            const directShortcut = document.createElement('kbd')
+            directShortcut.setAttribute('data-dsh-spotlight-result-shortcut', '')
+            directShortcut.textContent = formatResultShortcut(index, applePlatform)
+            accessory.appendChild(directShortcut)
+          }
+          option.append(copy, accessory)
           option.addEventListener('mousemove', () => {
             if (active !== index) { active = index; render() }
           })
@@ -248,6 +259,14 @@ export function mountSpotlight(host: SpotlightHost, document: Document, window: 
       // oxlint-disable-next-line typescript/no-deprecated
       if (event.isComposing || event.keyCode === 229) return
       if (event.key === 'Escape') { event.preventDefault(); close(); return }
+      const directIndex = directResultIndex(event)
+      if (directIndex !== undefined && directIndex < matches.length) {
+        event.preventDefault()
+        event.stopPropagation()
+        const action = matches[directIndex]?.item
+        if (action !== undefined) execute(action)
+        return
+      }
       const delta = selectionDelta(event)
       if (delta !== undefined) {
         event.preventDefault()
@@ -279,7 +298,8 @@ export function mountSpotlight(host: SpotlightHost, document: Document, window: 
   }
 
   const onGlobalKeydown = (event: KeyboardEvent): void => {
-    if (root !== undefined && selectionDelta(event) !== undefined) return
+    if (root !== undefined
+      && (selectionDelta(event) !== undefined || directResultIndex(event) !== undefined)) return
     if (recordingShortcut || !isSpotlightShortcut(event, shortcut)) return
     event.preventDefault()
     event.stopPropagation()

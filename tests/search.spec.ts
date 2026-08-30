@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import {
-  defaultShortcut, formatShortcut, isSpotlightShortcut, moveSelection, parseShortcut, selectionDelta,
-  shortcutFromEvent,
+  defaultShortcut, directResultIndex, formatResultShortcut, formatShortcut, isSpotlightShortcut,
+  moveSelection, parseShortcut, selectionDelta, shortcutFromEvent,
 } from '../src/spotlight/keyboard.ts'
 import { searchCandidates, type SearchCandidate } from '../src/spotlight/search.ts'
 
@@ -53,6 +53,18 @@ describe('spotlight keyboard behavior', () => {
     expect(selectionDelta({ ...event, key: 'k', ctrlKey: true })).toBe(-1)
     expect(selectionDelta({ ...event, key: 'j' })).toBeUndefined()
     expect(selectionDelta({ ...event, key: 'n', ctrlKey: true, shiftKey: true })).toBeUndefined()
+  })
+
+  it('maps browser-safe Alt-number shortcuts to the first nine results', () => {
+    const event = { key: '¡', code: 'Digit1', metaKey: false, ctrlKey: false, altKey: true, shiftKey: false }
+    expect(directResultIndex(event)).toBe(0)
+    expect(directResultIndex({ ...event, key: '9', code: 'Digit9' })).toBe(8)
+    expect(directResultIndex({ ...event, code: 'Digit0' })).toBeUndefined()
+    expect(directResultIndex({ ...event, ctrlKey: true })).toBeUndefined()
+    expect(directResultIndex({ ...event, metaKey: true })).toBeUndefined()
+    expect(directResultIndex({ ...event, shiftKey: true })).toBeUndefined()
+    expect(formatResultShortcut(0, true)).toBe('⌥1')
+    expect(formatResultShortcut(8, false)).toBe('Alt+9')
   })
 
   it('captures, validates, formats, and exactly matches a custom shortcut', () => {

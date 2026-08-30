@@ -109,6 +109,34 @@ describe('spotlight mount', () => {
     dispose()
   })
 
+  it('shows and executes direct Alt-number result shortcuts', () => {
+    const host: SpotlightHost = {
+      sessions: fakeSessions({
+        ids: ['a', 'b'],
+        byId: {
+          a: { id: 'a', displayTitle: 'Alpha', running: false },
+          b: { id: 'b', displayTitle: 'Beta', running: false },
+        },
+        current: 'a',
+      }),
+    }
+    const { dispose } = mountSpotlight(host, document, window)
+    keydown('k', { ctrlKey: true })
+    const input = document.querySelector<HTMLInputElement>('[data-dsh-spotlight-input]')!
+    const shortcuts = [...document.querySelectorAll('[data-dsh-spotlight-result-shortcut]')]
+
+    expect(shortcuts.map(shortcut => shortcut.textContent)).toEqual(['Alt+1', 'Alt+2'])
+    const direct = new KeyboardEvent('keydown', {
+      key: '™', code: 'Digit2', altKey: true, bubbles: true, cancelable: true,
+    })
+    input.dispatchEvent(direct)
+
+    expect(direct.defaultPrevented).toBe(true)
+    expect(host.sessions.open).toHaveBeenCalledWith('b')
+    expect(document.querySelector('[data-dsh-spotlight-root]')).toBeNull()
+    dispose()
+  })
+
   it('filters results from the input value', () => {
     const { dispose } = mountSpotlight(hostWithSessions(), document, window)
     keydown('k', { ctrlKey: true })

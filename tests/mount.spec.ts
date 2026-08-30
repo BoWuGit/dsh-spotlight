@@ -109,7 +109,7 @@ describe('spotlight mount', () => {
     dispose()
   })
 
-  it('shows and executes direct Control-Shift-number result shortcuts', () => {
+  it('shows and executes direct Alt-Shift-number result shortcuts', () => {
     const host: SpotlightHost = {
       sessions: fakeSessions({
         ids: ['a', 'b'],
@@ -125,9 +125,9 @@ describe('spotlight mount', () => {
     const input = document.querySelector<HTMLInputElement>('[data-dsh-spotlight-input]')!
     const shortcuts = [...document.querySelectorAll('[data-dsh-spotlight-result-shortcut]')]
 
-    expect(shortcuts.map(shortcut => shortcut.textContent)).toEqual(['Ctrl+Shift+1', 'Ctrl+Shift+2'])
+    expect(shortcuts.map(shortcut => shortcut.textContent)).toEqual(['Alt+Shift+1', 'Alt+Shift+2'])
     const direct = new KeyboardEvent('keydown', {
-      key: '@', code: 'Digit2', ctrlKey: true, shiftKey: true, bubbles: true, cancelable: true,
+      key: '€', code: 'Digit2', altKey: true, shiftKey: true, bubbles: true, cancelable: true,
     })
     input.dispatchEvent(direct)
 

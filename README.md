@@ -18,8 +18,8 @@ plugin settings—without leaving the keyboard.
   sessions, UI actions, and plugin settings.
 - **Keyboard navigation:** Arrow Up/Down, Control-N/P, or Control-J/K to
   select; Enter to run and Escape to close.
-- **Direct results:** Control-Shift-1 through Control-Shift-9 execute the first
-  nine visible results without using browser-reserved Command/Control-number keys.
+- **Direct results:** Alt/Option-Shift-1 through Alt/Option-Shift-9 execute the
+  first nine visible results without using browser-reserved Command/Control-number keys.
 - **Clean lifecycle:** removes its event listeners, styles, and DOM nodes when
   unloaded.
 
@@ -55,7 +55,7 @@ dsh --profile web
 1. Open Spotlight with the global shortcut, or type `/spotlight` in the DSH
    Web composer and pick the entry from the slash menu.
 2. Type to filter commands and actions.
-3. Use Arrow Up/Down, Control-N/P, or Control-J/K and Enter; press Control-Shift-1–9 to execute a numbered result directly; or click a result.
+3. Use Arrow Up/Down, Control-N/P, or Control-J/K and Enter; press Alt/Option-Shift-1–9 to execute a numbered result directly; or click a result.
 4. Click **Shortcut** in the footer to record a different key combination.
 5. Click **Reset** to restore the platform default.
 

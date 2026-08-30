@@ -79,9 +79,9 @@ export function selectionDelta(event: ShortcutEvent): -1 | 1 | undefined {
   return undefined
 }
 
-/** Map an exact Control-Shift plus top-row digit gesture to a zero-based result index. */
+/** Map an exact Alt/Option-Shift plus top-row digit gesture to a zero-based result index. */
 export function directResultIndex(event: ShortcutEvent): number | undefined {
-  if (!event.ctrlKey || !event.shiftKey || event.metaKey || event.altKey) return undefined
+  if (!event.altKey || !event.shiftKey || event.metaKey || event.ctrlKey) return undefined
   const codeMatch = /^Digit([1-9])$/.exec(event.code ?? '')
   const digit = codeMatch?.[1] ?? (/^[1-9]$/.test(event.key) ? event.key : undefined)
   return digit === undefined ? undefined : Number(digit) - 1
@@ -89,7 +89,7 @@ export function directResultIndex(event: ShortcutEvent): number | undefined {
 
 /** Format one direct result shortcut without using browser-reserved Mod-number keys. */
 export function formatResultShortcut(index: number, applePlatform: boolean): string {
-  return `${applePlatform ? '⌃⇧' : 'Ctrl+Shift+'}${index + 1}`
+  return `${applePlatform ? '⌥⇧' : 'Alt+Shift+'}${index + 1}`
 }
 
 /** Move a list selection with wraparound. */

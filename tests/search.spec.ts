@@ -55,16 +55,17 @@ describe('spotlight keyboard behavior', () => {
     expect(selectionDelta({ ...event, key: 'n', ctrlKey: true, shiftKey: true })).toBeUndefined()
   })
 
-  it('maps browser-safe Alt-number shortcuts to the first nine results', () => {
-    const event = { key: '¡', code: 'Digit1', metaKey: false, ctrlKey: false, altKey: true, shiftKey: false }
+  it('maps browser-safe Control-Shift-number shortcuts to the first nine results', () => {
+    const event = { key: '!', code: 'Digit1', metaKey: false, ctrlKey: true, altKey: false, shiftKey: true }
     expect(directResultIndex(event)).toBe(0)
     expect(directResultIndex({ ...event, key: '9', code: 'Digit9' })).toBe(8)
     expect(directResultIndex({ ...event, code: 'Digit0' })).toBeUndefined()
-    expect(directResultIndex({ ...event, ctrlKey: true })).toBeUndefined()
+    expect(directResultIndex({ ...event, ctrlKey: false })).toBeUndefined()
+    expect(directResultIndex({ ...event, shiftKey: false })).toBeUndefined()
     expect(directResultIndex({ ...event, metaKey: true })).toBeUndefined()
-    expect(directResultIndex({ ...event, shiftKey: true })).toBeUndefined()
-    expect(formatResultShortcut(0, true)).toBe('⌥1')
-    expect(formatResultShortcut(8, false)).toBe('Alt+9')
+    expect(directResultIndex({ ...event, altKey: true })).toBeUndefined()
+    expect(formatResultShortcut(0, true)).toBe('⌃⇧1')
+    expect(formatResultShortcut(8, false)).toBe('Ctrl+Shift+9')
   })
 
   it('captures, validates, formats, and exactly matches a custom shortcut', () => {
